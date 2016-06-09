@@ -536,7 +536,7 @@
 		$text = "<?php\n";
 		$text .= "// autoload \n\n";
 
-		$text .= "Trata requisição\n";
+		$text .= "//Trata requisição\n";
 		$text .= "if(!\$_POST){\n";
 		$text .= "	if(\$_GET) {\$_POST = \$_GET;}\n";
 		$text .= "	else{\$_POST =  file_get_contents ( 'php://input' );}";
@@ -563,8 +563,6 @@
 		$text .= "}\n\n";
 
 		$text .= "//chama autoload\n";
-		$text .= "spl_autoload_register(\"carregaClasses\");\n";
-
 		$text .= "spl_autoload_register(\"carregaClasses\");\n";
 
 		$text .= "?>";
