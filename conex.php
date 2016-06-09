@@ -29,6 +29,12 @@
 			echo "Erro " . mysqli_error($con);
 		}
 
+		echo "--------------------------------------------------------------------------<br>";
+		echo "--------------------------------------------------------------------------<br>";
+		echo " 	--------> Trabalhando nas classes de ".$row->table."...  <-----------   <br>";
+		echo "--------------------------------------------------------------------------<br>";
+		echo "--------------------------------------------------------------------------<br>";
+
 		$data = array();
 		while ($row2 = mysqli_fetch_object($resultColls)) {
 			$sql = sprintf("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = '%s' AND TABLE_NAME = '%s' AND REFERENCED_TABLE_NAME IS NOT NULL", $banco, $row->table);
@@ -46,8 +52,22 @@
 		}
 
 		createClass($row->table, $data);
+		echo "--> Model de ".$row->table." criada com sucesso!  <br>";
+		echo "--------------------------------------------------------------------------<br>";
+
 		createDao ($row->table, $data);
+		echo "--> DAO de ".$row->table." criada com sucesso!  <br>";
+		echo "--------------------------------------------------------------------------<br>";
+
+		createControl ($row->table, $data);
+		echo "--> Control de ".$row->table." criada com sucesso!  <br>";
+		echo "--------------------------------------------------------------------------<br>";
+
+		createRest ($row->table, $data);
+		echo "--> Rest de ".$row->table." criada com sucesso!  <br>";
+		echo "--------------------------------------------------------------------------<br>";
 		
+		echo "<br><br>";
 	}
 
 	// model
@@ -55,9 +75,10 @@
 	function createClass ($class, $data) {
 		
 		if(!file_exists('src')) mkdir('src');
-		if(!file_exists('src/'.$class)) mkdir('src/'.$class);
+		if(!file_exists('src/model')) mkdir('src/model');
+		if(!file_exists('src/model/'.$class)) mkdir('src/model/'.$class);
 		
-		$fp = fopen('src/'.$class.'/'.ucfirst($class).".php", "a");
+		$fp = fopen('src/model/'.$class.'/'.ucfirst($class).".php", "a");
 		
 		$text = "<?php\n";
 		$text .= "// model : ".$class."\n\n";
@@ -143,9 +164,10 @@
 	function createDao ($class, $data) {
 		
 		if(!file_exists('src')) mkdir('src');
-		if(!file_exists('src/'.$class)) mkdir('src/'.$class);
+		if(!file_exists('src/model')) mkdir('src/model');
+		if(!file_exists('src/model/'.$class)) mkdir('src/model/'.$class);
 		
-		$fp = fopen('src/'.$class.'/'.ucfirst($class)."DAO.php", "a");
+		$fp = fopen('src/model/'.$class.'/'.ucfirst($class)."DAO.php", "a");
 		
 		$text = "<?php\n";
 		$text .= "// dao : ".$class."\n\n";
@@ -170,7 +192,7 @@
 		writeAtualizar ($fp, $class, $data);
 		writeDeletar ($fp, $class, $data);
 		
-		$escreve = fwrite($fp, '}');
+		$escreve = fwrite($fp, "}\n\n?>");
 
 		fclose($fp);
 	}
@@ -200,7 +222,7 @@
 		$text .= "			die('[ERRO]: Class('.get_class(\$obj).') | Metodo(Cadastrar) | Erro('.mysqli_error(\$this->con).')');\n";
 		$text .= "		}\n";
 		$text .= "		return mysqli_insert_id(\$this->con);\n";
-		$text .= "	};\n\n";
+		$text .= "	}\n\n";
 
 		$escreve = fwrite($fp, $text, strlen($text));
 	}
@@ -230,7 +252,7 @@
 		$text .= "			die('[ERRO]: Class('.get_class(\$obj).') | Metodo(Atualizar) | Erro('.mysqli_error(\$this->con).')');\n";
 		$text .= "		}\n";
 		$text .= "		return mysqli_insert_id(\$this->con);\n";
-		$text .= "	};\n\n";
+		$text .= "	}\n\n";
 
 		$escreve = fwrite($fp, $text, strlen($text));
 	}
@@ -334,5 +356,171 @@
 		else {$t = "'%s'";}
 
 		return $t;
+	}
+
+	// control
+	function createControl ($class, $data) {
+		
+		if(!file_exists('src')) mkdir('src');
+		if(!file_exists('src/control')) mkdir('src/control');
+		
+		$fp = fopen('src/control/'.ucfirst($class)."Control.php", "a");
+		
+		$text = "<?php\n";
+		$text .= "// control : ".$class."\n\n";
+
+		$text .= "Class ".ucfirst($class)."Control {\n";
+		$text .= "	//atributos\n";
+		$text .= "	protected \$con;\n";
+		$text .= "	protected \$obj;\n";
+		$text .= "	protected \$objDAO;\n\n";
+
+		$text .= "	//construtor\n";
+		$text .= "	public function __construct(".ucfirst($class)." \$obj=NULL) {\n";
+		$text .= "		\$this->con = Conexao::getInstance()->getConexao();\n";
+		$text .= "		\$this->objDAO = new ".ucfirst($class)."DAO(\$this->con);\n";
+		$text .= "		\$this->obj = \$obj;\n";
+		$text .= "	}\n\n";
+
+		$text .= "	//metodos\n";
+		$text .= "	function cadastrar () {\n";
+		$text .= "		return \$this->objDAO->cadastrar(\$this->obj);\n";
+		$text .= "	}\n";
+
+		$text .= "	function buscarPorId () {\n";
+		$text .= "		return \$this->objDAO->buscarPorId(\$this->obj);\n";
+		$text .= "	}\n";
+		
+		$text .= "	function listar () {\n";
+		$text .= "		return \$this->objDAO->listar(\$this->obj);\n";
+		$text .= "	}\n";
+
+		$text .= "	function atualizar () {\n";
+		$text .= "		return \$this->objDAO->atualizar(\$this->obj);\n";
+		$text .= "	}\n";
+
+		$text .= "	function deletar () {\n";
+		$text .= "		return \$this->objDAO->deletar(\$this->obj);\n";
+		$text .= "	}\n";
+
+		$text .= "}\n";
+
+		$text .= "?>";
+
+		$escreve = fwrite($fp, $text, strlen($text));
+
+		fclose($fp);
+	}
+
+	// rest
+
+	function createRest ($class, $data) {
+		
+		if(!file_exists('src')) mkdir('src');
+		if(!file_exists('src/rest')) mkdir('src/rest');
+		
+		$fp = fopen('src/rest/'.$class.".php", "a");
+		
+		$text = "<?php\n";
+		$text .= "// rest : ".$class."\n\n";
+
+		$text .= "//inclui autoload\n";
+		$text .= "require_once 'autoload.php';\n\n";
+
+		$text .= "//verifica requisição\n";
+		$text .= "switch (\$_POST['metodo']) {\n";
+		$text .= "	case: 'cadastrar':\n";
+		$text .= "		cadastrar();\n";
+		$text .= "		break;\n";
+		$text .= "	case: 'buscarPorId':\n";
+		$text .= "		buscarPorId();\n";
+		$text .= "		break;\n";
+		$text .= "	case: 'listar':\n";
+		$text .= "		listar();\n";
+		$text .= "		break;\n";
+		$text .= "	case: 'atualizar':\n";
+		$text .= "		atualizar();\n";
+		$text .= "		break;\n";
+		$text .= "	case: 'deletar':\n";
+		$text .= "		deletar();\n";
+		$text .= "		break;\n";
+		$text .= "}\n\n";
+
+		$text .= "function cadastrar () {\n";
+		$text .= "	\$data = \$_POST['data'];\n";
+		$attrs = "";
+		foreach ($data as $key) {
+			if($key->Field != "id") {
+				if(!empty($key->fk)) {
+					$attrs .= "		new ".ucfirst($key->fk)."(\$data['".$key->Field."']),\n";
+				}else{
+					$attrs .= "		\$data['".$key->Field."'],\n";
+				}
+			}
+		}
+		$attrs = substr($attrs, 0, -2);
+		$text .= "	\$obj = new ".$class."(\n";
+		$text .= "		NULL,\n";
+		$text .= 		$attrs."\n";
+		$text .= "	);\n";
+		$text .= "	\$control = new ".ucfirst($class)."Control(\$obj);\n";
+		$text .= "	\$id = \$control->cadastrar();\n";
+		$text .= "	echo \$id;\n";
+		$text .= "}\n";
+
+		// buscar por id
+		$text .= "function buscarPorId () {\n";
+		$text .= "	\$data = \$_POST['data'];\n";
+		$text .= "	\$control new ".ucfirst($class)."Control(new ".ucfirst($class)."(\$data['id']));\n";
+		$text .= "	\$obj = \$control->buscarPorId();\n";
+		$text .= "	if(!empty(\$obj)) {\n";
+		$text .= "		echo json_encode(\$obj);\n";
+		$text .= "	}\n";
+		$text .= "}\n";
+
+		// listar
+		$text .= "function listar () {\n";
+		$text .= "	\$control = new ".ucfirst($class)."Control(new ".ucfirst($class).");\n";
+		$text .= "	\$lista = \$control->listar();\n";
+		$text .= "	if(!empty(\$lista)) {\n";
+		$text .= "		echo json_encode(\$lista);\n";
+		$text .= "	}\n";
+		$text .= "}\n";
+
+		// atualizar
+		$text .= "function atualizar () {\n";
+		$text .= "	\$data = \$_POST['data'];\n";
+		$attrs = "";
+		foreach ($data as $key) {
+			if(!empty($key->fk)) {
+				$attrs .= "		new ".ucfirst($key->fk)."(\$data['".$key->Field."']),\n";
+			}else{
+				$attrs .= "		\$data['".$key->Field."'],\n";
+			}
+		}
+		$attrs = substr($attrs, 0, -2);
+		$text .= "	\$obj = new ".ucfirst($class)."(\n";
+		$text .= 		$attrs."\n";
+		$text .= "	);\n";
+		$text .= "	\$control = new ".ucfirst($class)."Control(\$obj);\n";
+		$text .= "	\$id = \$control->atualizar();\n";
+		$text .= "	echo \$id;\n";
+		$text .= "}\n";
+
+		// deletar
+		$text .= "function deletar () {\n";
+		$text .= "	\$data = \$_POST['data'];\n";
+		$text .= "	\$banco = new ".ucfirst($class)."();\n";
+		$text .= "	\$banco->setId(\$data['id']);\n";
+		$text .= "	\$control = new ".ucfirst($class)."Control(\$banco);\n";
+		$text .= "	echo \$control->deletar();\n";
+		$text .= "}\n\n";
+
+
+		$text .= "?>";
+
+		$escreve = fwrite($fp, $text, strlen($text));
+
+		fclose($fp);
 	}
 ?>
