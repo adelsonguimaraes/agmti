@@ -290,9 +290,9 @@
 		$objs = substr($objs, 0 , -2) . "";
 		$text .= "			\$this->obj = new ".ucfirst($class)."(".$objs.");\n";
 		
-		$text .= "			array_push(\$this->lista, \$this->obj)\n";
+		$text .= "			array_push(\$this->lista, \$this->obj);\n";
 		$text .= "		}\n";
-		$text .= "		return \$this->lista\n";
+		$text .= "		return \$this->lista;\n";
 		$text .= "	}\n\n";
 	
 		$escreve = fwrite($fp, $text, strlen($text));
@@ -301,8 +301,8 @@
 	function writeListar ($fp, $class, $data) {
 		$text = "	//listar\n";
 		$text .= "	function listar (".ucfirst($class)." \$obj) {\n";
-		$text .= "		\$this->sql = \"SELECT * FROM ".$class."\"\n";
-		$text .= "		\$resultSet = mysqli_query(\$this->con, \$this->sql)\n";
+		$text .= "		\$this->sql = \"SELECT * FROM ".$class."\";\n";
+		$text .= "		\$resultSet = mysqli_query(\$this->con, \$this->sql);\n";
 		$text .= "		if(!\$resultSet) {\n";
 		$text .= "			die('[ERRO]: Class(Banco) | Metodo(Listar) | Erro('.mysqli_error(\$this->con).')');\n";
 		$text .= "		}\n";
@@ -321,9 +321,9 @@
 		$objs = substr($objs, 0 , -2) . "";
 		$text .= "			\$this->obj = new ".ucfirst($class)."(".$objs.");\n";
 		
-		$text .= "			array_push(\$this->lista, \$this->obj)\n";
+		$text .= "			array_push(\$this->lista, \$this->obj);\n";
 		$text .= "		}\n";
-		$text .= "		return \$this->lista\n";
+		$text .= "		return \$this->lista;\n";
 		$text .= "	}\n\n";
 	
 		$escreve = fwrite($fp, $text, strlen($text));
@@ -432,35 +432,180 @@
 		$text .= "<head>\n";
 		$text .= "	<title>Teste ".ucfirst($class)."</title>\n";
 
-		$text .= "	<!-- Latest compiled and minified CSS -->\n";
+		$text .= "	<meta charset=\"utf-8\">\n";
+    	$text .= "	<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+    	$text .= "	<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
+
+    	$text .= "	<!-- Latest compiled and minified CSS -->\n";
 		$text .= "	<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\">\n";
 
 		$text .= "</head>\n";
-		$text .= "<body bgcolor=\"#666\">\n";
-		$text .= "	<div style=\"background:#0099e6; margin:200px 500px; text-align:center;\">\n";
-		$text .= "	<h1>Teste da Class ".ucfirst($class)."</h1>\n";
-		$text .= "	<form method=\"post\" action=\"\" style=\"background:#b3e6ff; padding:30px;\">\n";
+		$text .= "<body>\n";
+		$text .= "	<div class=\"jumbotron\">\n";
+		$text .= "		<div class=\"container-fluid\">\n";
+		$text .= "			<h3>Teste da Classe</h3>\n";
+		$text .= "			<div class=\"row\">\n";
+		$text .= " 				<div class=\"col-md-12\">\n";
+		$text .= " 					<div class=\"panel  panel-default\">\n";
+		$text .= " 						<div class=\"panel-heading\">\n";
+		$text .= " 							<h3>Listar</h3>\n"; 
+		$text .= " 						</div>\n";
+		$text .= " 						<div class=\"panel-body\">\n";
+		$text .= " 							<div id=\"lista\"></div>\n";
+		$text .= " 						</div>\n";
+		$text .= " 					</div>\n";
+		$text .= " 				</div>\n";
+		$text .= " 			</div>\n";
+		
+		//cadastrar
+		$text .= " 			<div class=\"row\">\n";
+		$text .= " 				<div class=\"col-md-3\">\n";
+		$text .= " 					<div class=\"panel panel-default\">\n";
+		$text .= " 						<div class=\"panel-heading\">\n";
+		$text .= " 							<h3>Cadastro</h3>\n"; 
+		$text .= " 						</div>\n";
+		$text .= " 						<div class=\"panel-body\">\n";
+		$text .= " 							<form>\n";
+		$text .= " 								<div class=\"form-group\">\n";
+									
 		foreach ($data as $key) {
 			if($key->Field != "id" && $key->Field != "datacadastro" && $key->Field != "dataedicao") {
-				$text .= "		<div ".ucfirst($key->Field).": <input type=\"text\" id=\"".$key->Field."\" name=\"".$key->Field."\" size=\"50\"/></div>\n";
+				$text .= "									".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."\" name=\"".$key->Field."\" />\n";
 			}
 		}
-		$text .= "		<div><input type=\"submit\" id=\"cadastrar\" name=\"cadastrar\" value=\"Cadastrar\"/></div>\n";
-		$text .= "	</form>\n";
-		$text .= "	</div>\n";
+
+		$text .= " 								</div>\n";
+		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"cadastrar\">Cadastrar</button>\n";
+		$text .= " 							</form>\n";
+		$text .= " 						</div>\n";
+		$text .= " 					</div>\n";
+		$text .= " 				</div>\n";
+
+		//atualizar
+		$text .= " 				<div class=\"col-md-3\">\n";
+		$text .= " 					<div class=\"panel panel-default\">\n";
+		$text .= " 						<div class=\"panel-heading\">\n";
+		$text .= " 							<h3>Atualização</h3>\n"; 
+		$text .= " 						</div>\n";
+		$text .= " 						<div class=\"panel-body\">\n";
+		$text .= " 							<form>\n";
+		$text .= " 								<div class=\"form-group\">\n";
+									
+		foreach ($data as $key) {
+			if($key->Field != "dataedicao") {
+				$text .= "									".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."\" name=\"".$key->Field."\" />\n";
+			}
+		}
+
+		$text .= " 								</div>\n";
+		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"atualizar\">Atualizar</button>\n";
+		$text .= " 							</form>\n";
+		$text .= " 						</div>\n";
+		$text .= " 					</div>\n";
+		$text .= " 				</div>\n";
+
+		//buscar por Id
+		$text .= " 				<div class=\"col-md-3\">\n";
+		$text .= " 					<div class=\"panel panel-default\">\n";
+		$text .= " 						<div class=\"panel-heading\">\n";
+		$text .= " 							<h3>Buscar por ID</h3>\n"; 
+		$text .= " 						</div>\n";
+		$text .= " 						<div class=\"panel-body\">\n";
+		$text .= " 							<form>\n";
+		$text .= " 								<div class=\"form-group\">\n";
+									
+		$text .= " 									ID: <input class=\"form-control\" type=\"text\" id=\"id\" name=\"id\" />\n";
+			
+		$text .= " 								</div>\n";
+		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"buscar\">Buscar</button>\n";
+		$text .= " 							</form>\n";
+		$text .= " 							<div id=\"resultbusca\"></div>\n";
+		$text .= " 						</div>\n";
+		$text .= " 					</div>\n";
+		$text .= " 				</div>\n";
+
+		//deletar
+		$text .= " 				<div class=\"col-md-3\">\n";
+		$text .= " 					<div class=\"panel panel-default\">\n";
+		$text .= " 						<div class=\"panel-heading\">\n";
+		$text .= " 							<h3>Deletar</h3>\n"; 
+		$text .= " 						</div>\n";
+		$text .= " 						<div class=\"panel-body\">\n";
+		$text .= " 							<form>\n";
+		$text .= " 								<div class=\"form-group\">\n";
+									
+		$text .= " 									ID: <input class=\"form-control\" type=\"text\" id=\"id\" name=\"id\" />\n";
+			
+		$text .= " 								</div>\n";
+		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"deletar\">Deletar</button>\n";
+		$text .= " 							</form>\n";
+		$text .= " 							<div id=\"resultbusca\"></div>\n";
+		$text .= " 						</div>\n";
+		$text .= " 					</div>\n";
+		$text .= " 				</div>\n";
+
+		$text .= " 			</div>\n";
+		$text .= "		</div>\n";
+
+		$text .= " 	</div>\n";
+		
+		$text .= "	<script   src=\"https://code.jquery.com/jquery-2.2.4.min.js\"   integrity=\"sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=\"   crossorigin=\"anonymous\"></script>\n";
+
+		$text .= "	<!-- Latest compiled and minified JavaScript -->\n";
+		$text .= "	<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS\" crossorigin=\"anonymous\"></script>\n";
+
+		$text .= "	<script>\n";
+		$text .= "		$(function () {\n";
+		
+		$text .= "			function listar () {\n";
+		$text .= "				\$.ajax({\n";
+		$text .= "					url: '../rest/".$class.".php',\n";
+		$text .= "					type: 'POST',\n";
+		$text .= "					data: {'metodo':'listar'},\n";
+		$text .= "					success: function (data) {\n";
+		$text .= "						//var data = \$.parseJSON(data);\n";
+		$text .= "						\$('#lista').html(data);\n";
+		$text .= "					}\n";
+		$text .= "				});\n";
+		$text .= "			}\n";
+
+		$text .= "			listar();\n\n";
+
+		$text .= "			$('#cadastrar').click(function (){\n";
+		$text .= "				var dados = {\n";
+		foreach ($data as $key) {
+			if($key->Field != "id" && $key->Field != "datacadastro" && $key->Field != "dataedicao") {
+				$text .= "					\"".$key->Field."\":$(\"#".$key->Field."\").val(),\n";
+			}
+		}
+		$text = substr($text, 0, -2) . "\n";
+		$text .= "				}\n\n";
+
+		$text .= "				$.ajax({\n";
+		$text .= "					url: '../rest/banco.php',\n";
+		$text .= "					type: 'POST',\n";
+		$text .= "					data: {\n";
+		$text .= "						'metodo':'cadastrar',\n";
+		$text .= "						'data': dados\n";
+		$text .= "					},\n";
+		$text .= "					success: function (data) {\n";
+		$text .= "						alert(\"Cadastrado com sucesso!\");\n";
+		$text .= "						listar();\n";
+		$text .= "					}\n";
+		$text .= "				});\n\n";
+
+		foreach ($data as $key) {
+			if($key->Field != "datacadastro" && $key->Field != "dataedicao") {
+				$text .= "				$(\"#".$key->Field."\").val('');\n";
+			}
+		}
+
+		$text .= "			});\n";
+
+		$text .= "		});\n";
+		$text .= "	</script>\n";
+
 		$text .= "</body>\n";
-
-		$text .= "<script   src=\"https://code.jquery.com/jquery-2.2.4.min.js\"   integrity=\"sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=\"   crossorigin=\"anonymous\"></script>\n";
-
-		$text .= "<!-- Latest compiled and minified JavaScript -->\n";
-		$text .= "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS\" crossorigin=\"anonymous\"></script>\n";
-
-		$text .= "<script>\n";
-		$text .= "	$(function () {\n";
-		$text .= "		alert('Classe Teste OK');\n";
-		$text .= "	});\n";
-		$text .= "</script>\n";
-
 		$text .= "</html>\n";
 
 
@@ -486,19 +631,19 @@
 
 		$text .= "//verifica requisição\n";
 		$text .= "switch (\$_POST['metodo']) {\n";
-		$text .= "	case: 'cadastrar':\n";
+		$text .= "	case 'cadastrar':\n";
 		$text .= "		cadastrar();\n";
 		$text .= "		break;\n";
-		$text .= "	case: 'buscarPorId':\n";
+		$text .= "	case 'buscarPorId':\n";
 		$text .= "		buscarPorId();\n";
 		$text .= "		break;\n";
-		$text .= "	case: 'listar':\n";
+		$text .= "	case 'listar':\n";
 		$text .= "		listar();\n";
 		$text .= "		break;\n";
-		$text .= "	case: 'atualizar':\n";
+		$text .= "	case 'atualizar':\n";
 		$text .= "		atualizar();\n";
 		$text .= "		break;\n";
-		$text .= "	case: 'deletar':\n";
+		$text .= "	case 'deletar':\n";
 		$text .= "		deletar();\n";
 		$text .= "		break;\n";
 		$text .= "}\n\n";
@@ -509,7 +654,7 @@
 		$attrs = "";
 		foreach ($data as $key) {
 			// retiramos o id, datacadastro e dataedicao do metodo
-			if($key->Field != "id" || $key->Field != "datacadastro" || $key->Field != "dataedicao") {
+			if($key->Field != "id" && $key->Field != "datacadastro" && $key->Field != "dataedicao") {
 				// se for chave estrangeira
 				if(!empty($key->fk)) {
 					$attrs .= "		new ".ucfirst($key->fk)."(\$data['".$key->Field."']),\n";
@@ -531,7 +676,7 @@
 		// buscar por id
 		$text .= "function buscarPorId () {\n";
 		$text .= "	\$data = \$_POST['data'];\n";
-		$text .= "	\$control new ".ucfirst($class)."Control(new ".ucfirst($class)."(\$data['id']));\n";
+		$text .= "	\$control = new ".ucfirst($class)."Control(new ".ucfirst($class)."(\$data['id']));\n";
 		$text .= "	\$obj = \$control->buscarPorId();\n";
 		$text .= "	if(!empty(\$obj)) {\n";
 		$text .= "		echo json_encode(\$obj);\n";
