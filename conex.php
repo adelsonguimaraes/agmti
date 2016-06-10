@@ -213,9 +213,8 @@ if (isset($_POST['gerar'])) {
 		$objs = substr($objs, 0 , -2) . "";
 		$text .= "			\$this->obj = new ".ucfirst($class)."(".$objs.");\n";
 		
-		$text .= "			array_push(\$this->lista, \$this->obj);\n";
 		$text .= "		}\n";
-		$text .= "		return \$this->lista;\n";
+		$text .= "		return \$this->obj;\n";
 		$text .= "	}\n\n";
 	
 		$escreve = fwrite($fp, $text, strlen($text));
