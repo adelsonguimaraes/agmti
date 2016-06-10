@@ -9,6 +9,15 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 </head>
 <body >
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    	<div class="container">
+    		<div class="navbar-header">
+	            <a class="navbar-brand" href="../index.php">
+	                ../Seleção de Testes
+	            </a> 
+        	</div>
+    	</div>
+	</nav>
 	<div class="jumbotron">
 		<div class="container-fluid">
 			<h3>Teste da Classe</h3>
@@ -108,6 +117,13 @@
 			</div>
 		</div>
 	</div>
+	<nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    	<footer>
+	        <div class="container" style="padding-top:15px; text-align:center;">
+	            <p>Gerador de Classes 1.0</p>
+	        </div>
+	    </footer>
+	</nav>
 </body>
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>

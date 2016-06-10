@@ -1,83 +1,6 @@
 <?php
-	$host = "localhost";
-	$banco = "sgaf";
-	$user = "root";
-	$senha = "";
 
-	$con = mysqli_connect($host, $user, $senha, $banco);
-
-	if (mysqli_connect_error()) {
-		echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	}
-
-	// $sql = 'SHOW TABLES FROM '.$banco;
-	$sql = sprintf("SELECT TABLE_NAME as 'table' FROM information_schema.TABLES t where t.TABLE_SCHEMA = '%s'", $banco);
-
-	$result = mysqli_query($con, $sql);
-
-	if(!$result) {
-		echo "Erro: " . mysqli_error($con);
-	}
-
-	// criando a conexão com o banco
-	createConnection ($host, $user, $senha, $banco);
-	// criando o arquivo autoload
-	createAutoload();
-
-	while ($row = mysqli_fetch_object($result)) {
-
-		$sql = "SHOW COLUMNS FROM " . $row->table;
-
-		$resultColls = mysqli_query($con, $sql);
-
-		if(!$resultColls) {
-			echo "Erro " . mysqli_error($con);
-		}
-
-		echo "--------------------------------------------------------------------------<br>";
-		echo "--------------------------------------------------------------------------<br>";
-		echo " 	--------> Trabalhando nas classes de ".$row->table."...  <-----------   <br>";
-		echo "--------------------------------------------------------------------------<br>";
-		echo "--------------------------------------------------------------------------<br>";
-
-		$data = array();
-		while ($row2 = mysqli_fetch_object($resultColls)) {
-			$sql = sprintf("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = '%s' AND TABLE_NAME = '%s' AND REFERENCED_TABLE_NAME IS NOT NULL", $banco, $row->table);
-			$resultKeys = mysqli_query($con, $sql);
-			if(!$resultKeys) {
-				echo "Erro " . mysqli_error($con);
-			}
-			
-			while($row3 = mysqli_fetch_object($resultKeys)) {
-				if($row3->COLUMN_NAME == $row2->Field) {
-					$row2->fk = $row3->REFERENCED_TABLE_NAME;
-				}
-			}
-			array_push($data, $row2);
-		}
-
-		createClass($row->table, $data);
-		echo "--> Model de ".$row->table." criada com sucesso!  <br>";
-		echo "--------------------------------------------------------------------------<br>";
-
-		createDao ($row->table, $data);
-		echo "--> DAO de ".$row->table." criada com sucesso!  <br>";
-		echo "--------------------------------------------------------------------------<br>";
-
-		createControl ($row->table, $data);
-		echo "--> Control de ".$row->table." criada com sucesso!  <br>";
-		echo "--------------------------------------------------------------------------<br>";
-
-		createTeste ($row->table, $data);
-		echo "--> Teste de ".$row->table." criada com sucesso!  <br>";
-		echo "--------------------------------------------------------------------------<br>";
-
-		createRest ($row->table, $data);
-		echo "--> Rest de ".$row->table." criada com sucesso!  <br>";
-		echo "--------------------------------------------------------------------------<br>";
-		
-		echo "<br><br>";
-	}
+if (isset($_POST['gerar'])) {
 
 	// model
 
@@ -441,9 +364,19 @@
 
 		$text .= "</head>\n";
 		$text .= "<body>\n";
+		$text .= "	<nav class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n";
+    	$text .= "		<div class=\"container-fluid\">\n";
+    	$text .= "			<div class=\"navbar-header\">\n";
+	    $text .= "        		<a class=\"navbar-brand\" href=\"../index.php\">\n";
+	    $text .= "           		 ../Seleção de Testes\n";
+	    $text .= "        		</a>\n";
+        $text .= "			</div>\n";
+    	$text .= "		</div>\n";
+		$text .= "	</nav>\n";
+
 		$text .= "	<div class=\"jumbotron\">\n";
 		$text .= "		<div class=\"container-fluid\">\n";
-		$text .= "			<h3>Teste da Classe</h3>\n";
+		$text .= "			<h3>Teste da Classe  ".ucfirst($class)."</h3>\n";
 		$text .= "			<div class=\"row\">\n";
 		$text .= " 				<div class=\"col-md-12\">\n";
 		$text .= " 					<div class=\"panel  panel-default\">\n";
@@ -470,7 +403,7 @@
 									
 		foreach ($data as $key) {
 			if($key->Field != "id" && $key->Field != "datacadastro" && $key->Field != "dataedicao") {
-				$text .= "									".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."\" name=\"".$key->Field."\" />\n";
+				$text .= "									".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."_cadastrar\" name=\"".$key->Field."_cadastro\" />\n";
 			}
 		}
 
@@ -493,7 +426,7 @@
 									
 		foreach ($data as $key) {
 			if($key->Field != "dataedicao") {
-				$text .= "									".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."\" name=\"".$key->Field."\" />\n";
+				$text .= "									".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."_atualizar\" name=\"".$key->Field."_atualiza\" />\n";
 			}
 		}
 
@@ -514,7 +447,7 @@
 		$text .= " 							<form>\n";
 		$text .= " 								<div class=\"form-group\">\n";
 									
-		$text .= " 									ID: <input class=\"form-control\" type=\"text\" id=\"id\" name=\"id\" />\n";
+		$text .= " 									ID: <input class=\"form-control\" type=\"text\" id=\"id_buscar\" name=\"id_buscar\" />\n";
 			
 		$text .= " 								</div>\n";
 		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"buscar\">Buscar</button>\n";
@@ -534,7 +467,7 @@
 		$text .= " 							<form>\n";
 		$text .= " 								<div class=\"form-group\">\n";
 									
-		$text .= " 									ID: <input class=\"form-control\" type=\"text\" id=\"id\" name=\"id\" />\n";
+		$text .= " 									ID: <input class=\"form-control\" type=\"text\" id=\"id_deletar\" name=\"id_deletar\" />\n";
 			
 		$text .= " 								</div>\n";
 		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"deletar\">Deletar</button>\n";
@@ -548,6 +481,14 @@
 		$text .= "		</div>\n";
 
 		$text .= " 	</div>\n";
+
+		$text .= "	<nav class=\"navbar navbar-inverse navbar-fixed-bottom\" role=\"navigation\">\n";
+    	$text .= "		<footer>\n";
+	    $text .= "		    <div class=\"container\" style=\"padding-top:15px; text-align:center; color:#fff;\">\n";
+	    $text .= "	        	<p>Gerador de Classes 1.0</p>\n";
+	    $text .= "	    	</div>\n";
+	    $text .= "		</footer>\n";
+		$text .= "	</nav>\n";
 		
 		$text .= "	<script   src=\"https://code.jquery.com/jquery-2.2.4.min.js\"   integrity=\"sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=\"   crossorigin=\"anonymous\"></script>\n";
 
@@ -575,14 +516,14 @@
 		$text .= "				var dados = {\n";
 		foreach ($data as $key) {
 			if($key->Field != "id" && $key->Field != "datacadastro" && $key->Field != "dataedicao") {
-				$text .= "					\"".$key->Field."\":$(\"#".$key->Field."\").val(),\n";
+				$text .= "					\"".$key->Field."\":$(\"#".$key->Field."_cadastrar\").val(),\n";
 			}
 		}
 		$text = substr($text, 0, -2) . "\n";
 		$text .= "				}\n\n";
 
 		$text .= "				$.ajax({\n";
-		$text .= "					url: '../rest/banco.php',\n";
+		$text .= "					url: '../rest/".$class.".php',\n";
 		$text .= "					type: 'POST',\n";
 		$text .= "					data: {\n";
 		$text .= "						'metodo':'cadastrar',\n";
@@ -596,11 +537,85 @@
 
 		foreach ($data as $key) {
 			if($key->Field != "datacadastro" && $key->Field != "dataedicao") {
-				$text .= "				$(\"#".$key->Field."\").val('');\n";
+				$text .= "				$(\"#".$key->Field."_cadastrar\").val('');\n";
 			}
 		}
 
-		$text .= "			});\n";
+		$text .= "			});\n\n";
+
+
+		// atualizar
+		$text .= "			$('#atualizar').click(function (){\n";
+		$text .= "				var dados = {\n";
+		foreach ($data as $key) {
+			if($key->Field != "dataedicao") {
+				$text .= "					\"".$key->Field."\":$(\"#".$key->Field."_atualizar\").val(),\n";
+			}
+		}
+		$text = substr($text, 0, -2) . "\n";
+		$text .= "				}\n\n";
+
+		$text .= "				$.ajax({\n";
+		$text .= "					url: '../rest/".$class.".php',\n";
+		$text .= "					type: 'POST',\n";
+		$text .= "					data: {\n";
+		$text .= "						'metodo':'atualizar',\n";
+		$text .= "						'data': dados\n";
+		$text .= "					},\n";
+		$text .= "					success: function (data) {\n";
+		$text .= "						alert(\"Atualizado com sucesso!\");\n";
+		$text .= "						listar();\n";
+		$text .= "					}\n";
+		$text .= "				});\n\n";
+
+		foreach ($data as $key) {
+			if($key->Field != "dataedicao") {
+				$text .= "				$(\"#".$key->Field."_atualizar\").val('');\n";
+			}
+		}
+
+		$text .= "			});\n\n";
+
+		// buscar
+		$text .= "			$('#buscar').click(function (){\n";
+		$text .= "				var dados = {\"id\":$(\"#id_buscar\").val()}\n\n";
+
+		$text .= "				$.ajax({\n";
+		$text .= "					url: '../rest/".$class.".php',\n";
+		$text .= "					type: 'POST',\n";
+		$text .= "					data: {\n";
+		$text .= "						'metodo':'buscarPorId',\n";
+		$text .= "						'data': dados\n";
+		$text .= "					},\n";
+		$text .= "					success: function (data) {\n";
+		$text .= "						$('#resultbusca').text(data);\n";
+		$text .= "					}\n";
+		$text .= "				});\n\n";
+
+		$text .= "				$(\"#id_buscar\").val('');\n";
+		
+		$text .= "			});\n\n";
+
+		// deletar
+		$text .= "			$('#deletar').click(function (){\n";
+		$text .= "				var dados = {\"id\":$(\"#id_deletar\").val()}\n\n";
+
+		$text .= "				$.ajax({\n";
+		$text .= "					url: '../rest/".$class.".php',\n";
+		$text .= "					type: 'POST',\n";
+		$text .= "					data: {\n";
+		$text .= "						'metodo':'deletar',\n";
+		$text .= "						'data': dados\n";
+		$text .= "					},\n";
+		$text .= "					success: function (data) {\n";
+		$text .= "						listar();\n";
+		//$text .= "						alert(\"Deletado com Sucesso!\");\n";
+		$text .= "					}\n";
+		$text .= "				});\n\n";
+
+		$text .= "				$(\"#id_deletar\").val('');\n";
+		
+		$text .= "			});\n\n";
 
 		$text .= "		});\n";
 		$text .= "	</script>\n";
@@ -824,4 +839,151 @@
 		fclose($fp);
 	}
 
+
+	// usando as funções
+	$host = 'localhost';//$_POST['host'];
+	$banco = 'sgaf';//$_POST['banco'];
+	$user = 'root';//$_POST['user'];
+	$senha = '';//$_POST['senha'];
+
+	$con = mysqli_connect($host, $user, $senha, $banco);
+
+	if (mysqli_connect_error()) {
+		echo "Failed to connect to MySQL: " . mysqli_connect_error();
+	}
+
+	// $sql = 'SHOW TABLES FROM '.$banco;
+	$sql = sprintf("SELECT TABLE_NAME as 'table' FROM information_schema.TABLES t where t.TABLE_SCHEMA = '%s'", $banco);
+
+	$result = mysqli_query($con, $sql);
+
+	if(!$result) {
+		echo "Erro: " . mysqli_error($con);
+	}
+
+	// criando a conexão com o banco
+	createConnection ($host, $user, $senha, $banco);
+	// criando o arquivo autoload
+	createAutoload();
+
+	while ($row = mysqli_fetch_object($result)) {
+
+		$sql = "SHOW COLUMNS FROM " . $row->table;
+
+		$resultColls = mysqli_query($con, $sql);
+
+		if(!$resultColls) {
+			echo "Erro " . mysqli_error($con);
+		}
+
+		$data = array();
+		while ($row2 = mysqli_fetch_object($resultColls)) {
+			$sql = sprintf("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = '%s' AND TABLE_NAME = '%s' AND REFERENCED_TABLE_NAME IS NOT NULL", $banco, $row->table);
+			$resultKeys = mysqli_query($con, $sql);
+			if(!$resultKeys) {
+				echo "Erro " . mysqli_error($con);
+			}
+			
+			while($row3 = mysqli_fetch_object($resultKeys)) {
+				if($row3->COLUMN_NAME == $row2->Field) {
+					$row2->fk = $row3->REFERENCED_TABLE_NAME;
+				}
+			}
+			array_push($data, $row2);
+		}
+
+		createClass($row->table, $data);
+		createDao ($row->table, $data);
+		createControl ($row->table, $data);
+		createTeste ($row->table, $data);
+		createRest ($row->table, $data);
+
+		?> <script type="text/javascript"> window.location.replace('src/teste'); </script> <?php
+	}
+
+}//fim if
+
 ?>
+
+
+<html>
+<head>
+	<title>Teste</title>
+
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<style type="text/css">
+		body {
+			background: #ddd;
+		}
+	</style>
+
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    	<div class="container" style="padding-top:15px; text-align:center; color:#fff;">
+	         <h4>Gerador de Classes 1.0</h4>
+	    </div>
+	</nav>
+	<br><br><br><br><br>
+	<div class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3>Configurações do Sistema<h3>
+				</div>
+				<div class="panel-body">
+					<form method="POST">
+						<div class="form-group">
+							Host: <input type="text" class="form-control" id="host" name="host" value="localhost">
+						</div>
+						<div class="form-group">
+							Usuário: <input type="text" class="form-control" id="user" name="user" value="root">
+						</div>
+						<div class="form-group">
+							Senha: <input type="text" class="form-control" id="senha" name="senha" value="">
+						</div>
+						<div class="form-group">
+							Banco: <input type="text" class="form-control" id="banco" name="banco">
+						</div>
+						<!-- <button class="btn btn-success pull-right" type="submit" id="gerar" name="gerar" value="gerar">Gerar Classes</button> -->
+						<input class="btn btn-success pull-right" type="submit" id="gerar" name="gerar" value="Gerar">
+					</form>
+					<h3>Classes que serão geradas.</h3>
+					<ul>
+						<li><label><strong>Conexão</strong> : Arquivo responsável pela comunicação com o banco de dados.</label></li>
+						<li><label><strong>Autoload</strong> : Arquivo responsável pelo carregamento de classes.</label></li>
+						<li><label><strong>Model</strong> : Arquivo model de cada classe.</label></li>
+						<li><label><strong>DAO</strong> : Arquivo DAO de cada classe.</label></li>
+						<li><label><strong>Control</strong> : Arquivo control de cada classe.</label></li>
+						<li><label><strong>Rest</strong> : Arquivo rest de cada classe.</label></li>
+						<li><label><strong>Teste</strong> : Arquivo teste de cada classe.</label></li>
+					</ul>
+				</div>
+			</div>
+	</div>
+	<nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+    	<div class="container" style="padding-top:15px; text-align:center; color:#fff;">
+	         Gerador de Classes 1.0
+	    </div>
+	</nav>
+
+	<script src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+	<script type="text/javascript">
+		$(function () {
+			$('#gerar').click( function () {
+				if($('#host').val() === '' || $('#user').val() === '' || $('#banco').val() === '') {
+					return false;
+				}
+			});
+		});
+	</script>
+
+</body>
+</html>
