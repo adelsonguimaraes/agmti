@@ -19,6 +19,9 @@
 		echo "Erro: " . mysqli_error($con);
 	}
 
+	// criando a conexão com o banco
+	createConnection ($host, $user, $senha, $banco);
+	// criando o arquivo autoload
 	createAutoload();
 
 	while ($row = mysqli_fetch_object($result)) {
@@ -63,6 +66,10 @@
 
 		createControl ($row->table, $data);
 		echo "--> Control de ".$row->table." criada com sucesso!  <br>";
+		echo "--------------------------------------------------------------------------<br>";
+
+		createTeste ($row->table, $data);
+		echo "--> Teste de ".$row->table." criada com sucesso!  <br>";
 		echo "--------------------------------------------------------------------------<br>";
 
 		createRest ($row->table, $data);
@@ -414,6 +421,53 @@
 		fclose($fp);
 	}
 
+	// classes de teste
+	function createTeste ($class, $data) {
+		if(!file_exists('src')) mkdir('src');
+		if(!file_exists('src/teste')) mkdir('src/teste');
+		
+		$fp = fopen('src/teste/'.$class.".php", "a");
+		
+		$text = "<?php\n";
+		$text .= "// teste : ".$class."\n\n";
+
+		$text .= "//inclui autoload\n";
+		$text .= "require_once '../rest/autoload.php';\n\n";
+
+		$text .= "?>\n\n";
+
+		$text .= "<html>\n";
+		$text .= "<head>\n";
+		$text .= "	<title>Teste ".ucfirst($class)."</title>\n";
+		$text .= "</head>\n";
+		$text .= "<body bgcolor=\"#666\">\n";
+		$text .= "	<div style=\"background:#0099e6; margin:200px 500px; text-align:center;\">\n";
+		$text .= "	<h1>Teste da Class ".ucfirst($class)."</h1>\n";
+		$text .= "	<form method=\"post\" action=\"\" style=\"background:#b3e6ff; padding:30px;\">\n";
+		foreach ($data as $key) {
+			if($key->Field != "id" && $key->Field != "datacadastro" && $key->Field != "dataedicao") {
+				$text .= "		<div style=\"display:block;\">".ucfirst($key->Field).": <input type=\"text\" id=\"".$key->Field."\" name=\"".$key->Field."\" size=\"50\"/></div>\n";
+			}
+		}
+		$text .= "		div><input type=\"submit\" id=\"cadastrar\" name=\"cadastrar\" value=\"Cadastrar\"/></div>\n";
+		$text .= "	</form>\n";
+		$text .= "	</div>\n";
+		$text .= "</body>\n";
+		$text .= "</html>\n";
+
+		$text .= "<?php\n";
+		$text .= "// cadastrar\n";
+		$text .= "if(isset(\$_POST['cadastrar'])) {\n";
+		$text .= "	new ".ucfirst($class)"\n";
+		$text .= "	var_dump(\$_POST);\n";
+		$text .= "}\n";
+		$text .= "?>\n";
+
+		$escreve = fwrite($fp, $text, strlen($text));
+
+		fclose($fp);
+	}
+
 	// rest
 
 	function createRest ($class, $data) {
@@ -448,11 +502,14 @@
 		$text .= "		break;\n";
 		$text .= "}\n\n";
 
+		// metodo cadastrar
 		$text .= "function cadastrar () {\n";
 		$text .= "	\$data = \$_POST['data'];\n";
 		$attrs = "";
 		foreach ($data as $key) {
-			if($key->Field != "id") {
+			// retiramos o id, datacadastro e dataedicao do metodo
+			if($key->Field != "id" || $key->Field != "datacadastro" || $key->Field != "dataedicao") {
+				// se for chave estrangeira
 				if(!empty($key->fk)) {
 					$attrs .= "		new ".ucfirst($key->fk)."(\$data['".$key->Field."']),\n";
 				}else{
@@ -494,10 +551,14 @@
 		$text .= "	\$data = \$_POST['data'];\n";
 		$attrs = "";
 		foreach ($data as $key) {
-			if(!empty($key->fk)) {
-				$attrs .= "		new ".ucfirst($key->fk)."(\$data['".$key->Field."']),\n";
-			}else{
-				$attrs .= "		\$data['".$key->Field."'],\n";
+			// retiramos a data de edicao do metodo
+			if($key->Field != "dataedicao") {
+				// se for chave estrangeira
+				if(!empty($key->fk)) {
+					$attrs .= "		new ".ucfirst($key->fk)."(\$data['".$key->Field."']),\n";
+				}else{
+					$attrs .= "		\$data['".$key->Field."'],\n";
+				}
 			}
 		}
 		$attrs = substr($attrs, 0, -2);
@@ -543,23 +604,22 @@
 		$text .= "}\n\n";
 
 		$text .= "// conexao\n";
-		$text .= "require_once(\"../Conexao.php\");\n\n";
+		$text .= "require_once(\"../util/Conexao.php\");\n\n";
 
-		$text .= "// carrega class";
+		$text .= "// carrega class\n";
 		$text .= "function carregaClasses(\$class){\n";
 		$text .= "	//Verifica se existe Control no nome da classe\n";
 		$text .= "	if(strrpos(\$class, \"Control\")) {\n";
 		$text .= "		require_once(\"../control/\".\$class.\".php\");\n";
-		$text .= "	}\n\n";
-		$text .= "	//Verifica se existe DAO no nome da classe";
-		$text .= "	else if(strrpos(\$class, \"DAO\")) {\n";
+		$text .= "	//Verifica se existe DAO no nome da classe\n";
+		$text .= "	}else if(strrpos(\$class, \"DAO\")) {\n";
 		$text .= "		\$bean = strtolower(substr(\$class, 0, strrpos(\$class, \"DAO\")));\n";
-		$text .= "		require_once \"../model/\".\$bean.\"/\".\$class.\".php\";{\n";
+		$text .= "		require_once \"../model/\".\$bean.\"/\".\$class.\".php\";\n";
 		$text .= " 	//se nao for control ou dao é model\n";
 		$text .= " 	}else{\n";
 		$text .= "		\$bean = strtolower(\$class);\n";
 		$text .= "		require_once \"../model/\".\$bean.\"/\".\$class.\".php\";\n";
-		$text .= "	}";
+		$text .= "	}\n";
 		$text .= "}\n\n";
 
 		$text .= "//chama autoload\n";
@@ -572,4 +632,50 @@
 		fclose($fp);
 
 	}
+
+	function createConnection ($host, $user, $senha, $banco) {
+		
+		if(!file_exists('src')) mkdir('src');
+		if(!file_exists('src/util')) mkdir('src/util');
+		
+		$fp = fopen("src/util/conexao.php", "a");
+		
+		$text = "<?php\n";
+		$text .= "// conexao\n\n";
+
+		$text .= "Class Conexao {\n";
+		$text .= "	private \$con;\n\n";
+		
+		$text .= "	protected function __construct () {\n";
+		$text .= "		\$this->con = mysqli_connect(\"".$host."\",\"".$user."\",\"".$senha."\", \"".$banco."\");\n";
+		$text .= "		if (mysqli_connect_error()) {\n";
+		$text .= "			echo \"Falha na conexão com MySQL: \" . mysqli_connect_error();\n";
+		$text .= "		}\n";
+		$text .= "	}\n";
+		
+		$text .= "	public static function getInstance () {\n";
+		$text .= "		static \$instance = null;\n";
+		$text .= "		if (null === \$instance){\n";
+		$text .= "			\$instance = new static();\n";
+		$text .= "		}\n";
+		$text .= "		return \$instance;\n";
+		$text .= "	}\n";
+	
+		$text .= "	public function getConexao () {\n";
+		$text .= "		mysqli_query(\$this->con, \"SET NAMES 'utf8'\");\n";
+		$text .= "		mysqli_query(\$this->con, 'SET character_set_connection=utf8');\n";
+		$text .= "		mysqli_query(\$this->con, 'SET character_set_client=utf8');\n";
+		$text .= "		mysqli_query(\$this->con, 'SET character_set_result=utf8');\n";
+		$text .= "		return \$this->con;\n";
+		$text .= "	}\n";
+
+		$text .= "}\n\n";
+
+		$text .= "?>";
+
+		$escreve = fwrite($fp, $text, strlen($text));
+
+		fclose($fp);
+	}
+
 ?>
