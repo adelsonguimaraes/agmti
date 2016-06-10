@@ -426,20 +426,14 @@
 		if(!file_exists('src')) mkdir('src');
 		if(!file_exists('src/teste')) mkdir('src/teste');
 		
-		$fp = fopen('src/teste/'.$class.".php", "a");
+		$fp = fopen('src/teste/'.$class.".html", "a");
 		
-		$text .= "<html>\n";
+		$text = "<html>\n";
 		$text .= "<head>\n";
 		$text .= "	<title>Teste ".ucfirst($class)."</title>\n";
 
 		$text .= "	<!-- Latest compiled and minified CSS -->\n";
 		$text .= "	<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\">\n";
-
-		$text .= "	<!-- Optional theme -->\n";
-		$text .= "	<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css\" integrity=\"sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r\" crossorigin=\"anonymous\">\n";
-
-		$text .= "	<!-- Latest compiled and minified JavaScript -->\n";
-		$text .= "	<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS\" crossorigin=\"anonymous\"></script>\n";
 
 		$text .= "</head>\n";
 		$text .= "<body bgcolor=\"#666\">\n";
@@ -448,20 +442,23 @@
 		$text .= "	<form method=\"post\" action=\"\" style=\"background:#b3e6ff; padding:30px;\">\n";
 		foreach ($data as $key) {
 			if($key->Field != "id" && $key->Field != "datacadastro" && $key->Field != "dataedicao") {
-				$text .= "		<div style=\"display:block;\">".ucfirst($key->Field).": <input type=\"text\" id=\"".$key->Field."\" name=\"".$key->Field."\" size=\"50\"/></div>\n";
+				$text .= "		<div ".ucfirst($key->Field).": <input type=\"text\" id=\"".$key->Field."\" name=\"".$key->Field."\" size=\"50\"/></div>\n";
 			}
 		}
-		$text .= "		div><input type=\"submit\" id=\"cadastrar\" name=\"cadastrar\" value=\"Cadastrar\"/></div>\n";
+		$text .= "		<div><input type=\"submit\" id=\"cadastrar\" name=\"cadastrar\" value=\"Cadastrar\"/></div>\n";
 		$text .= "	</form>\n";
 		$text .= "	</div>\n";
 		$text .= "</body>\n";
 
-		$text .= "<script src=\"https://code.jquery.com/jquery-3.0.0.min.js\"   integrity=\"sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=\"   crossorigin=\"anonymous\"></script>\n";
+		$text .= "<script   src=\"https://code.jquery.com/jquery-2.2.4.min.js\"   integrity=\"sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=\"   crossorigin=\"anonymous\"></script>\n";
+
+		$text .= "<!-- Latest compiled and minified JavaScript -->\n";
+		$text .= "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS\" crossorigin=\"anonymous\"></script>\n";
 
 		$text .= "<script>\n";
 		$text .= "	$(function () {\n";
-		$text .= "		alert('hahaha');\n";
-		$text .= "	)};\n";
+		$text .= "		alert('Classe Teste OK');\n";
+		$text .= "	});\n";
 		$text .= "</script>\n";
 
 		$text .= "</html>\n";
