@@ -944,10 +944,17 @@ if (isset($_POST['gerar'])) {
 
 
 	// usando as funções
-	$host = 'localhost';//$_POST['host'];
-	$banco = 'sgaf';//$_POST['banco'];
-	$user = 'root';//$_POST['user'];
-	$senha = '';//$_POST['senha'];
+	$host = $_POST['host'];
+	$banco = $_POST['banco'];
+	$user = $_POST['user'];
+	$senha = $_POST['senha'];
+	$projeto = '';
+	$po = '';
+	$equipe = '';
+	$datainicio = '';
+	$dataatual = '';
+
+
 
 	$con = mysqli_connect($host, $user, $senha, $banco);
 
@@ -1054,6 +1061,16 @@ if (isset($_POST['gerar'])) {
 						<div class="form-group">
 							Banco: <input type="text" class="form-control" id="banco" name="banco">
 						</div>
+						<h3>Documentação</h3>
+						<div class="form-group">
+							Projeto: <input type="text" class="form-control" id="projeto" name="projeto">
+						</div>
+						<div class="form-group">
+							Dono do Produto (P.O): <input type="text" class="form-control" id="po" name="po">
+						</div>
+						<div class="form-group">
+							Data Inicial: <input type="text" class="form-control" id="datainicio" name="datainicio">
+						</div>
 						<!-- <button class="btn btn-success pull-right" type="submit" id="gerar" name="gerar" value="gerar">Gerar Classes</button> -->
 						<input class="btn btn-success pull-right" type="submit" id="gerar" name="gerar" value="Gerar">
 					</form>
@@ -1070,6 +1087,7 @@ if (isset($_POST['gerar'])) {
 				</div>
 			</div>
 	</div>
+	<br><br><br><br><br>
 	<nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
     	<div class="container" style="padding-top:15px; text-align:center; color:#fff;">
 	         Gerador de Classes 1.0
