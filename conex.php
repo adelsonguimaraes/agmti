@@ -361,125 +361,132 @@ if (isset($_POST['gerar'])) {
     	$text .= "	<!-- Latest compiled and minified CSS -->\n";
 		$text .= "	<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\">\n";
 
+		$text .= "	<style type=\"text/css\">\n";
+		$text .= "		body {\n";
+		$text .= "			background: #ddd;\n";
+		$text .= "		}\n";
+		$text .= "	</style>\n";
+
 		$text .= "</head>\n";
 		$text .= "<body>\n";
 		$text .= "	<nav class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n";
     	$text .= "		<div class=\"container-fluid\">\n";
     	$text .= "			<div class=\"navbar-header\">\n";
-	    $text .= "        		<a class=\"navbar-brand\" href=\"../index.php\">\n";
+	    $text .= "        		<a class=\"navbar-brand\" href=\"index.php\">\n";
 	    $text .= "           		 ../Seleção de Testes\n";
 	    $text .= "        		</a>\n";
         $text .= "			</div>\n";
     	$text .= "		</div>\n";
 		$text .= "	</nav>\n";
+		
+		$text .= "	<br><br><br><br>\n";
 
-		$text .= "	<div class=\"jumbotron\">\n";
-		$text .= "		<div class=\"container-fluid\">\n";
-		$text .= "			<h3>Teste da Classe  ".ucfirst($class)."</h3>\n";
-		$text .= "			<div class=\"row\">\n";
-		$text .= " 				<div class=\"col-md-12\">\n";
-		$text .= " 					<div class=\"panel  panel-default\">\n";
-		$text .= " 						<div class=\"panel-heading\">\n";
-		$text .= " 							<h3>Listar</h3>\n"; 
-		$text .= " 						</div>\n";
-		$text .= " 						<div class=\"panel-body\">\n";
-		$text .= " 							<div id=\"lista\"></div>\n";
-		$text .= " 						</div>\n";
+		$text .= "	<div class=\"container-fluid\">\n";
+		$text .= "		<h3>Teste da Classe  ".ucfirst($class)."</h3>\n";
+		$text .= "		<div class=\"row\">\n";
+		$text .= " 			<div class=\"col-md-12\">\n";
+		$text .= " 				<div class=\"panel  panel-default\">\n";
+		$text .= " 					<div class=\"panel-heading\">\n";
+		$text .= " 						<h3>Listar</h3>\n"; 
+		$text .= " 					</div>\n";
+		$text .= " 					<div class=\"panel-body\">\n";
+		$text .= " 						<div id=\"lista\"></div>\n";
 		$text .= " 					</div>\n";
 		$text .= " 				</div>\n";
 		$text .= " 			</div>\n";
+		$text .= " 		</div>\n";
 		
 		//cadastrar
-		$text .= " 			<div class=\"row\">\n";
-		$text .= " 				<div class=\"col-md-3\">\n";
-		$text .= " 					<div class=\"panel panel-default\">\n";
-		$text .= " 						<div class=\"panel-heading\">\n";
-		$text .= " 							<h3>Cadastro</h3>\n"; 
-		$text .= " 						</div>\n";
-		$text .= " 						<div class=\"panel-body\">\n";
-		$text .= " 							<form>\n";
-		$text .= " 								<div class=\"form-group\">\n";
+		$text .= " 		<div class=\"row\">\n";
+		$text .= " 			<div class=\"col-md-3\">\n";
+		$text .= " 				<div class=\"panel panel-default\">\n";
+		$text .= " 					<div class=\"panel-heading\">\n";
+		$text .= " 						<h3>Cadastro</h3>\n"; 
+		$text .= " 					</div>\n";
+		$text .= " 					<div class=\"panel-body\">\n";
+		$text .= " 						<form>\n";
+		$text .= " 							<div class=\"form-group\">\n";
 									
 		foreach ($data as $key) {
 			if($key->Field != "id" && $key->Field != "datacadastro" && $key->Field != "dataedicao") {
-				$text .= "									".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."_cadastrar\" name=\"".$key->Field."_cadastro\" />\n";
+				$text .= "								".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."_cadastrar\" name=\"".$key->Field."_cadastro\" />\n";
 			}
 		}
 
-		$text .= " 								</div>\n";
-		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"cadastrar\">Cadastrar</button>\n";
-		$text .= " 							</form>\n";
-		$text .= " 						</div>\n";
+		$text .= " 							</div>\n";
+		$text .= " 							<button type=\"button\" class=\"btn btn-success\" id=\"cadastrar\">Cadastrar</button>\n";
+		$text .= " 						</form>\n";
 		$text .= " 					</div>\n";
 		$text .= " 				</div>\n";
+		$text .= " 			</div>\n";
 
 		//atualizar
-		$text .= " 				<div class=\"col-md-3\">\n";
-		$text .= " 					<div class=\"panel panel-default\">\n";
-		$text .= " 						<div class=\"panel-heading\">\n";
-		$text .= " 							<h3>Atualização</h3>\n"; 
-		$text .= " 						</div>\n";
-		$text .= " 						<div class=\"panel-body\">\n";
-		$text .= " 							<form>\n";
-		$text .= " 								<div class=\"form-group\">\n";
+		$text .= " 			<div class=\"col-md-3\">\n";
+		$text .= " 				<div class=\"panel panel-default\">\n";
+		$text .= " 					<div class=\"panel-heading\">\n";
+		$text .= " 						<h3>Atualização</h3>\n"; 
+		$text .= " 					</div>\n";
+		$text .= " 					<div class=\"panel-body\">\n";
+		$text .= " 						<form>\n";
+		$text .= " 							<div class=\"form-group\">\n";
 									
 		foreach ($data as $key) {
 			if($key->Field != "dataedicao") {
-				$text .= "									".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."_atualizar\" name=\"".$key->Field."_atualiza\" />\n";
+				$text .= "								".ucfirst($key->Field).": <input class=\"form-control\" type=\"text\" id=\"".$key->Field."_atualizar\" name=\"".$key->Field."_atualiza\" />\n";
 			}
 		}
 
-		$text .= " 								</div>\n";
-		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"atualizar\">Atualizar</button>\n";
-		$text .= " 							</form>\n";
-		$text .= " 						</div>\n";
+		$text .= " 							</div>\n";
+		$text .= " 							<button type=\"button\" class=\"btn btn-success\" id=\"atualizar\">Atualizar</button>\n";
+		$text .= " 						</form>\n";
 		$text .= " 					</div>\n";
 		$text .= " 				</div>\n";
+		$text .= " 			</div>\n";
 
 		//buscar por Id
-		$text .= " 				<div class=\"col-md-3\">\n";
-		$text .= " 					<div class=\"panel panel-default\">\n";
-		$text .= " 						<div class=\"panel-heading\">\n";
-		$text .= " 							<h3>Buscar por ID</h3>\n"; 
-		$text .= " 						</div>\n";
-		$text .= " 						<div class=\"panel-body\">\n";
-		$text .= " 							<form>\n";
-		$text .= " 								<div class=\"form-group\">\n";
+		$text .= " 			<div class=\"col-md-3\">\n";
+		$text .= " 				<div class=\"panel panel-default\">\n";
+		$text .= " 					<div class=\"panel-heading\">\n";
+		$text .= " 						<h3>Buscar por ID</h3>\n"; 
+		$text .= " 					</div>\n";
+		$text .= " 					<div class=\"panel-body\">\n";
+		$text .= " 						<form>\n";
+		$text .= " 							<div class=\"form-group\">\n";
 									
-		$text .= " 									ID: <input class=\"form-control\" type=\"text\" id=\"id_buscar\" name=\"id_buscar\" />\n";
+		$text .= " 								ID: <input class=\"form-control\" type=\"text\" id=\"id_buscar\" name=\"id_buscar\" />\n";
 			
-		$text .= " 								</div>\n";
-		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"buscar\">Buscar</button>\n";
-		$text .= " 							</form>\n";
-		$text .= " 							<div id=\"resultbusca\"></div>\n";
-		$text .= " 						</div>\n";
+		$text .= " 							</div>\n";
+		$text .= " 							<button type=\"button\" class=\"btn btn-success\" id=\"buscar\">Buscar</button>\n";
+		$text .= " 						</form>\n";
+		$text .= " 						<div id=\"resultbusca\"></div>\n";
 		$text .= " 					</div>\n";
 		$text .= " 				</div>\n";
+		$text .= " 			</div>\n";
 
 		//deletar
-		$text .= " 				<div class=\"col-md-3\">\n";
-		$text .= " 					<div class=\"panel panel-default\">\n";
-		$text .= " 						<div class=\"panel-heading\">\n";
-		$text .= " 							<h3>Deletar</h3>\n"; 
-		$text .= " 						</div>\n";
-		$text .= " 						<div class=\"panel-body\">\n";
-		$text .= " 							<form>\n";
-		$text .= " 								<div class=\"form-group\">\n";
+		$text .= " 			<div class=\"col-md-3\">\n";
+		$text .= " 				<div class=\"panel panel-default\">\n";
+		$text .= " 					<div class=\"panel-heading\">\n";
+		$text .= " 						<h3>Deletar</h3>\n"; 
+		$text .= " 					</div>\n";
+		$text .= " 					<div class=\"panel-body\">\n";
+		$text .= " 						<form>\n";
+		$text .= " 							<div class=\"form-group\">\n";
 									
-		$text .= " 									ID: <input class=\"form-control\" type=\"text\" id=\"id_deletar\" name=\"id_deletar\" />\n";
+		$text .= " 								ID: <input class=\"form-control\" type=\"text\" id=\"id_deletar\" name=\"id_deletar\" />\n";
 			
-		$text .= " 								</div>\n";
-		$text .= " 								<button type=\"button\" class=\"btn btn-success\" id=\"deletar\">Deletar</button>\n";
-		$text .= " 							</form>\n";
-		$text .= " 							<div id=\"resultbusca\"></div>\n";
-		$text .= " 						</div>\n";
+		$text .= " 							</div>\n";
+		$text .= " 							<button type=\"button\" class=\"btn btn-success\" id=\"deletar\">Deletar</button>\n";
+		$text .= " 						</form>\n";
+		$text .= " 						<div id=\"resultbusca\"></div>\n";
 		$text .= " 					</div>\n";
 		$text .= " 				</div>\n";
-
 		$text .= " 			</div>\n";
-		$text .= "		</div>\n";
 
-		$text .= " 	</div>\n";
+		$text .= " 		</div>\n";
+		$text .= "	</div>\n";
+
+		$text .= "	<br><br><br><br>\n";
 
 		$text .= "	<nav class=\"navbar navbar-inverse navbar-fixed-bottom\" role=\"navigation\">\n";
     	$text .= "		<footer>\n";
@@ -838,6 +845,103 @@ if (isset($_POST['gerar'])) {
 		fclose($fp);
 	}
 
+	function createIndexTeste () {
+
+		if(!file_exists('src')) mkdir('src');
+		if(!file_exists('src/teste')) mkdir('src/teste');
+		
+		$fp = fopen("src/teste/index.php", "a");
+		
+		$text = ""  
+
+		."<?php\n"
+		."// index testes\n\n"
+
+		."	//path\n"
+		."	\$path = '../teste';\n"
+		."	\$diretorio = dir(\$path);\n"
+		."?>\n"
+
+		."<html>\n"
+		."<head>\n"
+		."	<title>Teste</title>\n"
+
+		."	<meta charset=\"utf-8\">\n"
+    	."	<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+    	."	<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n"
+
+		."	<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\" integrity=\"sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7\" crossorigin=\"anonymous\">\n"
+
+		."	<style type=\"text/css\">\n"
+		."	body {\n"
+		."		background: #ddd;\n"
+		."	}\n"
+		."	.list {\n"
+		."		display: block;\n"
+		."		color: #666;\n"
+		."	}\n"
+		."	</style>\n"
+
+		."</head>\n"
+		."<body>\n"
+
+		."	<nav class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">\n"
+    	."		<div class=\"container\" style=\"padding-top:15px; text-align:center; color:#fff;\">\n"
+	    ."	   		<h4>Gerador de Classes 1.0</h4>\n"
+	    ."		</div>\n"
+		."	</nav>\n"
+		."	<br><br><br><br><br>\n"
+
+		."	<div class=\"container\">\n"
+		."		<div class=\"panel panel-default\">\n"
+		."			<div class=\"panel-heading\">\n"
+		."				<h3>Arquivos de teste das Classes<h3>\n"
+		."			</div>\n"
+		."			<div class=\"panel-body\">\n"
+		."				<ul>\n"
+		."					<?php\n"
+		."						while (\$arquivo = \$diretorio -> read()) {\n"
+		."							\$label = substr(\$arquivo, 0, strrpos(\$arquivo, \".\"));\n"
+		."							if(strlen(\$label) >  3 && \$label != \"index\") {\n"
+		."								?>\n"
+		."									<li><a  class=\"list\" href=\"<?php echo \$arquivo ?>\"><label><?php echo ucfirst(\$label) ?></label></a></li>\n"
+		."								<?php\n"
+		."							}\n"
+		."						}\n"
+		."					?>\n"
+		."				</ul>\n"
+		."			</div>\n"
+		."		</div>\n"
+		."	</div>\n"
+		."	<br><br><br><br><br>\n"
+
+		."	<nav class=\"navbar navbar-inverse navbar-fixed-bottom\" role=\"navigation\">\n"
+	    ."		<div class=\"container\" style=\"padding-top:15px; text-align:center; color:#fff;\">\n"
+		."	         Gerador de Classes 1.0\n"
+		."	    </div>\n"
+		."	</nav>\n\n"
+
+		."	<script src=\"https://code.jquery.com/jquery-2.2.4.min.js\"   integrity=\"sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=\"   crossorigin=\"anonymous\"></script>\n"
+		."	<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js\" integrity=\"sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS\" crossorigin=\"anonymous\"></script>\n"
+
+		."	<script type=\"text/javascript\">\n"
+		."		\$(function () {\n"
+		."			\$('#gerar').click( function () {\n"
+		."			if(\$('#host').val() === '' || \$('#user').val() === '' || \$('#banco').val() === '') {\n"
+		."					return false;\n"
+		."				}\n"
+		."			});\n"
+		."		});\n"
+		."	</script>\n"
+
+		."</body>\n"
+		."</html>\n";
+
+		$escreve = fwrite($fp, $text, strlen($text));
+
+		fclose($fp);
+	}
+
 
 	// usando as funções
 	$host = 'localhost';//$_POST['host'];
@@ -864,6 +968,8 @@ if (isset($_POST['gerar'])) {
 	createConnection ($host, $user, $senha, $banco);
 	// criando o arquivo autoload
 	createAutoload();
+	// index testes
+	createIndexTeste ();
 
 	while ($row = mysqli_fetch_object($result)) {
 
