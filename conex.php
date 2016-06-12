@@ -1162,7 +1162,7 @@ if (!empty($_POST['gerar'])) {
 							Banco  <span style="color:red;">*</span>
 							<input type="text" class="form-control" id="banco" name="banco">
 						</div>
-						<h3>Documentação</h3>
+						<h3>Documentação <small> - Essas informações ficarão no topo de cada arquivo PHP</small></h3>
 						<div class="form-group">
 							Projeto: <input type="text" class="form-control" id="projeto" name="projeto">
 						</div>
