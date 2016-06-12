@@ -4,7 +4,7 @@ if (isset($_POST['gerar'])) {
 
 	// model
 
-	function createClass ($class, $data) {
+	function createClass ($class, $data, $doc) {
 		
 		if(!file_exists('src')) mkdir('src');
 		if(!file_exists('src/model')) mkdir('src/model');
@@ -14,6 +14,17 @@ if (isset($_POST['gerar'])) {
 		
 		$text = "<?php\n";
 		$text .= "// model : ".$class."\n\n";
+
+		// escreve documentação
+		$text .= "/*\n";
+		$text .= "	Projeto: ".$doc['projeto'].".\n";
+		$text .= "	Project Owner: ".$doc['po'].".\n";
+		foreach ($doc['equipe'] as $key) {
+			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		}
+		$text .= "	Data de início: ".$doc['datainicio'].".\n";
+		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
+		$text .= "*/\n\n";
 
 		$text .= "Class ". ucfirst($class) ." implements JsonSerializable {\n";
 		
@@ -93,7 +104,7 @@ if (isset($_POST['gerar'])) {
 
 	// dao
 
-	function createDao ($class, $data) {
+	function createDao ($class, $data, $doc) {
 		
 		if(!file_exists('src')) mkdir('src');
 		if(!file_exists('src/model')) mkdir('src/model');
@@ -103,6 +114,17 @@ if (isset($_POST['gerar'])) {
 		
 		$text = "<?php\n";
 		$text .= "// dao : ".$class."\n\n";
+
+		// escreve documentação
+		$text .= "/*\n";
+		$text .= "	Projeto: ".$doc['projeto'].".\n";
+		$text .= "	Project Owner: ".$doc['po'].".\n";
+		foreach ($doc['equipe'] as $key) {
+			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		}
+		$text .= "	Data de início: ".$doc['datainicio'].".\n";
+		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
+		$text .= "*/\n\n";
 
 		$text .= "Class ".ucfirst($class)."DAO {\n";
 		$text .= "	//atributos\n";
@@ -290,7 +312,7 @@ if (isset($_POST['gerar'])) {
 	}
 
 	// control
-	function createControl ($class, $data) {
+	function createControl ($class, $data, $doc) {
 		
 		if(!file_exists('src')) mkdir('src');
 		if(!file_exists('src/control')) mkdir('src/control');
@@ -299,6 +321,17 @@ if (isset($_POST['gerar'])) {
 		
 		$text = "<?php\n";
 		$text .= "// control : ".$class."\n\n";
+
+		// escreve documentação
+		$text .= "/*\n";
+		$text .= "	Projeto: ".$doc['projeto'].".\n";
+		$text .= "	Project Owner: ".$doc['po'].".\n";
+		foreach ($doc['equipe'] as $key) {
+			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		}
+		$text .= "	Data de início: ".$doc['datainicio'].".\n";
+		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
+		$text .= "*/\n\n";
 
 		$text .= "Class ".ucfirst($class)."Control {\n";
 		$text .= "	//atributos\n";
@@ -637,7 +670,7 @@ if (isset($_POST['gerar'])) {
 
 	// rest
 
-	function createRest ($class, $data) {
+	function createRest ($class, $data, $doc) {
 		
 		if(!file_exists('src')) mkdir('src');
 		if(!file_exists('src/rest')) mkdir('src/rest');
@@ -645,7 +678,19 @@ if (isset($_POST['gerar'])) {
 		$fp = fopen('src/rest/'.$class.".php", "a");
 		
 		$text = "<?php\n";
+
 		$text .= "// rest : ".$class."\n\n";
+
+		// escreve documentação
+		$text .= "/*\n";
+		$text .= "	Projeto: ".$doc['projeto'].".\n";
+		$text .= "	Project Owner: ".$doc['po'].".\n";
+		foreach ($doc['equipe'] as $key) {
+			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		}
+		$text .= "	Data de início: ".$doc['datainicio'].".\n";
+		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
+		$text .= "*/\n\n";
 
 		$text .= "//inclui autoload\n";
 		$text .= "require_once 'autoload.php';\n\n";
@@ -754,7 +799,7 @@ if (isset($_POST['gerar'])) {
 		fclose($fp);
 	}
 
-	function createAutoload () {
+	function createAutoload ($doc) {
 
 		if(!file_exists('src')) mkdir('src');
 		if(!file_exists('src/rest')) mkdir('src/rest');
@@ -762,7 +807,17 @@ if (isset($_POST['gerar'])) {
 		$fp = fopen("src/rest/autoload.php", "a");
 		
 		$text = "<?php\n";
-		$text .= "// autoload \n\n";
+		
+		// escreve documentação
+		$text .= "/*\n";
+		$text .= "	Projeto: ".$doc['projeto'].".\n";
+		$text .= "	Project Owner: ".$doc['po'].".\n";
+		foreach ($doc['equipe'] as $key) {
+			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		}
+		$text .= "	Data de início: ".$doc['datainicio'].".\n";
+		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
+		$text .= "*/\n\n";
 
 		$text .= "//Trata requisição\n";
 		$text .= "if(!\$_POST){\n";
@@ -800,7 +855,7 @@ if (isset($_POST['gerar'])) {
 
 	}
 
-	function createConnection ($host, $user, $senha, $banco) {
+	function createConnection ($host, $user, $senha, $banco, $doc) {
 		
 		if(!file_exists('src')) mkdir('src');
 		if(!file_exists('src/util')) mkdir('src/util');
@@ -808,7 +863,17 @@ if (isset($_POST['gerar'])) {
 		$fp = fopen("src/util/conexao.php", "a");
 		
 		$text = "<?php\n";
-		$text .= "// conexao\n\n";
+
+		// escreve documentação
+		$text .= "/*\n";
+		$text .= "	Projeto: ".$doc['projeto'].".\n";
+		$text .= "	Project Owner: ".$doc['po'].".\n";
+		foreach ($doc['equipe'] as $key) {
+			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		}
+		$text .= "	Data de início: ".$doc['datainicio'].".\n";
+		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
+		$text .= "*/\n\n";
 
 		$text .= "Class Conexao {\n";
 		$text .= "	private \$con;\n\n";
@@ -948,13 +1013,14 @@ if (isset($_POST['gerar'])) {
 	$banco = $_POST['banco'];
 	$user = $_POST['user'];
 	$senha = $_POST['senha'];
-	$projeto = '';
-	$po = '';
-	$equipe = '';
-	$datainicio = '';
-	$dataatual = '';
 
-
+	$doc = array(
+		'projeto'=>$_POST['projeto'],
+		'po'=>$_POST['po'],
+		'equipe'=>json_decode($_POST['equipe']),
+		'datainicio'=>$_POST['datainicio'],
+		'dataatual'=>date('d/m/Y')
+	);
 
 	$con = mysqli_connect($host, $user, $senha, $banco);
 
@@ -972,9 +1038,10 @@ if (isset($_POST['gerar'])) {
 	}
 
 	// criando a conexão com o banco
-	createConnection ($host, $user, $senha, $banco);
+	createConnection ($host, $user, $senha, $banco, $doc);
 	// criando o arquivo autoload
-	createAutoload();
+
+	createAutoload($doc);
 	// index testes
 	createIndexTeste ();
 
@@ -1004,11 +1071,11 @@ if (isset($_POST['gerar'])) {
 			array_push($data, $row2);
 		}
 
-		createClass($row->table, $data);
-		createDao ($row->table, $data);
-		createControl ($row->table, $data);
-		createTeste ($row->table, $data);
-		createRest ($row->table, $data);
+		createClass($row->table, $data, $doc);
+		createDao ($row->table, $data, $doc);
+		createControl ($row->table, $data, $doc);
+		createTeste ($row->table, $data, $doc);
+		createRest ($row->table, $data, $doc);
 
 		?> <script type="text/javascript"> window.location.replace('src/teste'); </script> <?php
 	}
@@ -1071,9 +1138,56 @@ if (isset($_POST['gerar'])) {
 						<div class="form-group">
 							Data Inicial: <input type="text" class="form-control" id="datainicio" name="datainicio">
 						</div>
+						<div class="form-group">
+							<input type="hidden" class="form-control" id="equipe" name="equipe">
+						</div>
+						<h3>Equipe de Desenvolvimento</h3>
+						<div class="row">
+							<div class="col-md-3">
+								<div class="form-group">
+									Cargo:
+									<select class="form-control" id="cargo" name="cargo">
+										<option value="Gerente de Projeto">Gerente de Projeto</option>
+										<option value="Analista">Analista</option>
+										<option value="DBA">DBA</option>
+										<option value="Coordenador">Coordenador</option>
+										<option value="Desenvolvedor">Desenvolvedor</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-7">
+								<div class="form-group">
+									Nome: <input type="text" class="form-control" id="nome" name="nome">
+								</div>
+							</div>
+							<div class="col-md-2">
+								&nbsp;
+								<button class="btn btn-primary btn-block" id="adcmembro" type="button">Adicionar</button>
+							</div>
+						</div>
+
+						<div>
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<td>Cargo</td>
+										<td>Nome</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr id="tr">
+										<td id="tdcargo"></td>
+										<td id="tdnome"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
 						<!-- <button class="btn btn-success pull-right" type="submit" id="gerar" name="gerar" value="gerar">Gerar Classes</button> -->
+						<br>
 						<input class="btn btn-success pull-right" type="submit" id="gerar" name="gerar" value="Gerar">
 					</form>
+					<br>
 					<h3>Classes que serão geradas.</h3>
 					<ul>
 						<li><label><strong>Conexão</strong> : Arquivo responsável pela comunicação com o banco de dados.</label></li>
@@ -1104,6 +1218,25 @@ if (isset($_POST['gerar'])) {
 				if($('#host').val() === '' || $('#user').val() === '' || $('#banco').val() === '') {
 					return false;
 				}
+			});
+			var membros = [];
+			$('#adcmembro').click( function () {
+				
+				if ($('#nome').val() === "") return false;
+
+				membros.push({'cargo':$('#cargo').val(),'nome':$('#nome').val()});
+				
+				var tr = $('#tr').clone();
+				tr.find('#tdcargo').text($('#cargo').val());
+				tr.find('#tdnome').text($('#nome').val());
+				
+				$('#tr').after(tr);
+
+				if(membros.length <= 1) $('#tr').remove();
+
+				$('#nome').val('');
+
+				$('#equipe').val(JSON.stringify(membros));
 			});
 		});
 	</script>
