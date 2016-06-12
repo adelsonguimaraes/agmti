@@ -1,6 +1,5 @@
 <?php
-
-if (isset($_POST['gerar'])) {
+if (!empty($_POST['gerar'])) {
 
 	// model
 
@@ -19,8 +18,10 @@ if (isset($_POST['gerar'])) {
 		$text .= "/*\n";
 		$text .= "	Projeto: ".$doc['projeto'].".\n";
 		$text .= "	Project Owner: ".$doc['po'].".\n";
-		foreach ($doc['equipe'] as $key) {
-			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		if(!empty($doc['equipe'])) {
+			foreach ($doc['equipe'] as $key) {
+				$text .= "	".$key->cargo.": ".$key->nome.".\n";
+			}
 		}
 		$text .= "	Data de início: ".$doc['datainicio'].".\n";
 		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
@@ -119,8 +120,10 @@ if (isset($_POST['gerar'])) {
 		$text .= "/*\n";
 		$text .= "	Projeto: ".$doc['projeto'].".\n";
 		$text .= "	Project Owner: ".$doc['po'].".\n";
-		foreach ($doc['equipe'] as $key) {
-			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		if(!empty($doc['equipe'])) {
+			foreach ($doc['equipe'] as $key) {
+				$text .= "	".$key->cargo.": ".$key->nome.".\n";
+			}
 		}
 		$text .= "	Data de início: ".$doc['datainicio'].".\n";
 		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
@@ -334,8 +337,10 @@ if (isset($_POST['gerar'])) {
 		$text .= "/*\n";
 		$text .= "	Projeto: ".$doc['projeto'].".\n";
 		$text .= "	Project Owner: ".$doc['po'].".\n";
-		foreach ($doc['equipe'] as $key) {
-			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		if(!empty($doc['equipe'])) {
+			foreach ($doc['equipe'] as $key) {
+				$text .= "	".$key->cargo.": ".$key->nome.".\n";
+			}
 		}
 		$text .= "	Data de início: ".$doc['datainicio'].".\n";
 		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
@@ -693,8 +698,10 @@ if (isset($_POST['gerar'])) {
 		$text .= "/*\n";
 		$text .= "	Projeto: ".$doc['projeto'].".\n";
 		$text .= "	Project Owner: ".$doc['po'].".\n";
-		foreach ($doc['equipe'] as $key) {
-			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		if(!empty($doc['equipe'])) {
+			foreach ($doc['equipe'] as $key) {
+				$text .= "	".$key->cargo.": ".$key->nome.".\n";
+			}
 		}
 		$text .= "	Data de início: ".$doc['datainicio'].".\n";
 		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
@@ -820,8 +827,10 @@ if (isset($_POST['gerar'])) {
 		$text .= "/*\n";
 		$text .= "	Projeto: ".$doc['projeto'].".\n";
 		$text .= "	Project Owner: ".$doc['po'].".\n";
-		foreach ($doc['equipe'] as $key) {
-			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		if(!empty($doc['equipe'])) {
+			foreach ($doc['equipe'] as $key) {
+				$text .= "	".$key->cargo.": ".$key->nome.".\n";
+			}
 		}
 		$text .= "	Data de início: ".$doc['datainicio'].".\n";
 		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
@@ -876,8 +885,10 @@ if (isset($_POST['gerar'])) {
 		$text .= "/*\n";
 		$text .= "	Projeto: ".$doc['projeto'].".\n";
 		$text .= "	Project Owner: ".$doc['po'].".\n";
-		foreach ($doc['equipe'] as $key) {
-			$text .= "	".$key->cargo.": ".$key->nome.".\n";
+		if(!empty($doc['equipe'])) {
+			foreach ($doc['equipe'] as $key) {
+				$text .= "	".$key->cargo.": ".$key->nome.".\n";
+			}
 		}
 		$text .= "	Data de início: ".$doc['datainicio'].".\n";
 		$text .= "	Data Atual: ".$doc['dataatual'].".\n"; 
@@ -1017,76 +1028,88 @@ if (isset($_POST['gerar'])) {
 
 
 	// usando as funções
-	$host = $_POST['host'];
-	$banco = $_POST['banco'];
-	$user = $_POST['user'];
-	$senha = $_POST['senha'];
 
-	$doc = array(
-		'projeto'=>$_POST['projeto'],
-		'po'=>$_POST['po'],
-		'equipe'=>json_decode($_POST['equipe']),
-		'datainicio'=>$_POST['datainicio'],
-		'dataatual'=>date('d/m/Y')
-	);
+	if(file_exists('src')) {
+		?>
+			<script type="text/javascript">
+				alert("Erro: Já existe um diretório chamado \"src\", delete o diretório e tente novamente!");
+			</script>
+		<?php
+	}else{
 
-	$con = mysqli_connect($host, $user, $senha, $banco);
+	
+		$host = $_POST['host'];
+		$banco = $_POST['banco'];
+		$user = $_POST['user'];
+		$senha = $_POST['senha'];
 
-	if (mysqli_connect_error()) {
-		echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	}
+		$doc = array(
+			'projeto'=>$_POST['projeto'],
+			'po'=>$_POST['po'],
+			'equipe'=>json_decode($_POST['equipe']),
+			'datainicio'=>$_POST['datainicio'],
+			'dataatual'=>date('d/m/Y')
+		);
 
-	// $sql = 'SHOW TABLES FROM '.$banco;
-	$sql = sprintf("SELECT TABLE_NAME as 'table' FROM information_schema.TABLES t where t.TABLE_SCHEMA = '%s'", $banco);
+		$con = mysqli_connect($host, $user, $senha, $banco);
 
-	$result = mysqli_query($con, $sql);
-
-	if(!$result) {
-		echo "Erro: " . mysqli_error($con);
-	}
-
-	// criando a conexão com o banco
-	createConnection ($host, $user, $senha, $banco, $doc);
-	// criando o arquivo autoload
-
-	createAutoload($doc);
-	// index testes
-	createIndexTeste ();
-
-	while ($row = mysqli_fetch_object($result)) {
-
-		$sql = "SHOW COLUMNS FROM " . $row->table;
-
-		$resultColls = mysqli_query($con, $sql);
-
-		if(!$resultColls) {
-			echo "Erro " . mysqli_error($con);
+		if (mysqli_connect_error()) {
+			echo "Failed to connect to MySQL: " . mysqli_connect_error();
 		}
 
-		$data = array();
-		while ($row2 = mysqli_fetch_object($resultColls)) {
-			$sql = sprintf("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = '%s' AND TABLE_NAME = '%s' AND REFERENCED_TABLE_NAME IS NOT NULL", $banco, $row->table);
-			$resultKeys = mysqli_query($con, $sql);
-			if(!$resultKeys) {
+		// $sql = 'SHOW TABLES FROM '.$banco;
+		$sql = sprintf("SELECT TABLE_NAME as 'table' FROM information_schema.TABLES t where t.TABLE_SCHEMA = '%s'", $banco);
+
+		$result = mysqli_query($con, $sql);
+
+		if(!$result) {
+			echo "Erro: " . mysqli_error($con);
+		}
+
+		// criando a conexão com o banco
+		createConnection ($host, $user, $senha, $banco, $doc);
+		// criando o arquivo autoload
+
+		createAutoload($doc);
+		// index testes
+		createIndexTeste ();
+
+		while ($row = mysqli_fetch_object($result)) {
+
+			$sql = "SHOW COLUMNS FROM " . $row->table;
+
+			$resultColls = mysqli_query($con, $sql);
+
+			if(!$resultColls) {
 				echo "Erro " . mysqli_error($con);
 			}
-			
-			while($row3 = mysqli_fetch_object($resultKeys)) {
-				if($row3->COLUMN_NAME == $row2->Field) {
-					$row2->fk = $row3->REFERENCED_TABLE_NAME;
+
+			$data = array();
+			while ($row2 = mysqli_fetch_object($resultColls)) {
+				$sql = sprintf("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = '%s' AND TABLE_NAME = '%s' AND REFERENCED_TABLE_NAME IS NOT NULL", $banco, $row->table);
+				$resultKeys = mysqli_query($con, $sql);
+				if(!$resultKeys) {
+					echo "Erro " . mysqli_error($con);
 				}
+				
+				while($row3 = mysqli_fetch_object($resultKeys)) {
+					if($row3->COLUMN_NAME == $row2->Field) {
+						$row2->fk = $row3->REFERENCED_TABLE_NAME;
+					}
+				}
+				array_push($data, $row2);
 			}
-			array_push($data, $row2);
+
+			createClass($row->table, $data, $doc);
+			createDao ($row->table, $data, $doc);
+			createControl ($row->table, $data, $doc);
+			createTeste ($row->table, $data, $doc);
+			createRest ($row->table, $data, $doc);
+
+			?> <script type="text/javascript"> window.location.replace('src/teste'); </script> <?php
 		}
 
-		createClass($row->table, $data, $doc);
-		createDao ($row->table, $data, $doc);
-		createControl ($row->table, $data, $doc);
-		createTeste ($row->table, $data, $doc);
-		createRest ($row->table, $data, $doc);
-
-		?> <script type="text/javascript"> window.location.replace('src/teste'); </script> <?php
-	}
+	}// fim else
 
 }//fim if
 
@@ -1125,16 +1148,19 @@ if (isset($_POST['gerar'])) {
 				<div class="panel-body">
 					<form method="POST">
 						<div class="form-group">
-							Host: <input type="text" class="form-control" id="host" name="host" value="localhost">
+							Host <span style="color:red;">*</span>
+							<input type="text" class="form-control" id="host" name="host" value="localhost">
 						</div>
 						<div class="form-group">
-							Usuário: <input type="text" class="form-control" id="user" name="user" value="root">
+							Usuário <span style="color:red;">*</span>
+							<input type="text" class="form-control" id="user" name="user" value="root">
 						</div>
 						<div class="form-group">
-							Senha: <input type="text" class="form-control" id="senha" name="senha" value="">
+							Senha <input type="text" class="form-control" id="senha" name="senha" value="">
 						</div>
 						<div class="form-group">
-							Banco: <input type="text" class="form-control" id="banco" name="banco">
+							Banco  <span style="color:red;">*</span>
+							<input type="text" class="form-control" id="banco" name="banco">
 						</div>
 						<h3>Documentação</h3>
 						<div class="form-group">
