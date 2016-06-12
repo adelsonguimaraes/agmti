@@ -1087,7 +1087,7 @@ if (isset($_POST['gerar'])) {
 
 <html>
 <head>
-	<title>Teste</title>
+	<title>Gerador de Classes</title>
 
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
