@@ -163,7 +163,11 @@ if (isset($_POST['gerar'])) {
 			}else{
 				$text .= $key->Field. ", ";
 				$values .= _getType ($key->Type) . ", ";
-				$objs .= "			mysqli_real_escape_string(\$this->con, \$obj->get".ucfirst($key->Field)."()),\n";
+				if(!empty($key->fk)) {
+					$objs .= "			mysqli_real_escape_string(\$this->con, \$obj->get".ucfirst($key->Field)."()->getId()),\n";
+				}else{
+					$objs .= "			mysqli_real_escape_string(\$this->con, \$obj->get".ucfirst($key->Field)."()),\n";
+				}
 			}
 		}
 		$text = substr($text, 0 , -2) . ")\n";
@@ -192,7 +196,11 @@ if (isset($_POST['gerar'])) {
 				if($key->Field == "dataedicao") {
 					$objs .= "			mysqli_real_escape_string(\$this->con, date('Y-m-d')),\n";
 				}else{
-					$objs .= "			mysqli_real_escape_string(\$this->con, \$obj->get".ucfirst($key->Field)."()),\n";
+					if(!empty($key->fk)) {
+						$objs .= "			mysqli_real_escape_string(\$this->con, \$obj->get".ucfirst($key->Field)."()->getId()),\n";
+					}else{
+						$objs .= "			mysqli_real_escape_string(\$this->con, \$obj->get".ucfirst($key->Field)."()),\n";
+					}
 				}
 			}
 		}
